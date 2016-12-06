@@ -11,7 +11,6 @@ DROP TABLE IF EXISTS `flight`;
 DROP TABLE IF EXISTS `promo_code`; 
 DROP TABLE IF EXISTS `seats`; 
 DROP TABLE IF EXISTS `travel_class`;
-DROP TABLE IF EXISTS `booking_price`;
 DROP TABLE IF EXISTS `luggage`;
 DROP TABLE IF EXISTS `payment`; 
 DROP TABLE IF EXISTS `card_details`; 
