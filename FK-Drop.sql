@@ -1,3 +1,5 @@
+USE airline_booking;
+
 /*******************************************************************************
    Use the code below to undo the foreign keys after creation. 
 ********************************************************************************/
@@ -26,11 +28,14 @@ ALTER TABLE `flight` DROP INDEX `AirportID_idx`;
 ALTER TABLE `flight` DROP FOREIGN KEY `fk_PlaneID`;
 ALTER TABLE `flight` DROP INDEX `PlaneID_idx`;
 
-ALTER TABLE `promo_code` DROP FOREIGN KEY `fk_PaymentID`;
-ALTER TABLE `promo_code` DROP INDEX `PaymentID_idx`;
+ALTER TABLE `flight_times` DROP FOREIGN KEY `fk5_FlightID`;
+ALTER TABLE `flight_times` DROP INDEX `FlightID_idx5`;
 
 ALTER TABLE `seats` DROP FOREIGN KEY `fk2_PlaneID`;
 ALTER TABLE `seats` DROP INDEX `PlaneID_idx2`;
+
+ALTER TABLE `seats` DROP FOREIGN KEY `fk6_PassengerID`;
+ALTER TABLE `seats` DROP INDEX `PassengerID_idx6`;
 
 ALTER TABLE `travel_class` DROP FOREIGN KEY `fk4_PassengerID`;
 ALTER TABLE `travel_class` DROP INDEX `PassengerID_idx4`;
@@ -55,9 +60,6 @@ ALTER TABLE `booking` DROP INDEX `AccountID_idx2`;
 
 ALTER TABLE `booking` DROP FOREIGN KEY `fk4_FlightID`;
 ALTER TABLE `booking` DROP INDEX `FlightID_idx4`;
-
-ALTER TABLE `booking` DROP FOREIGN KEY `fk7_PassengerID`;
-ALTER TABLE `booking` DROP INDEX `PassengerID_idx7`;
 
 ALTER TABLE `booking_status` DROP FOREIGN KEY `fk4_BookingID`;
 ALTER TABLE `booking_status` DROP INDEX `BookingID_idx4`;

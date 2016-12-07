@@ -1,4 +1,4 @@
-
+USE airline_booking;
 
 /*******************************************************************************
    FOREIGN KEY CREATE
@@ -42,15 +42,18 @@ ALTER TABLE `flight` ADD CONSTRAINT `fk_AirportID` FOREIGN KEY (`AirportId`) REF
 ALTER TABLE `flight` ADD INDEX `PlaneID_idx` (`PlaneID` ASC);
 ALTER TABLE `flight` ADD CONSTRAINT `fk_PlaneID` FOREIGN KEY (`PlaneID`) REFERENCES `aeroplane` (`PlaneID`) ON DELETE CASCADE ON UPDATE CASCADE; 
 
--- promo_code 
-  
-ALTER TABLE `promo_code` ADD INDEX `PaymentID_idx` (`PaymentID` ASC);
-ALTER TABLE `promo_code` ADD CONSTRAINT `fk_PaymentID` FOREIGN KEY (`PaymentID`) REFERENCES `payment` (`PaymentID`) ON DELETE CASCADE ON UPDATE CASCADE;
+-- flight_times
+
+ALTER TABLE `flight_times` ADD INDEX `FlightID_idx5` (`FlightID` ASC);
+ALTER TABLE `flight_times` ADD CONSTRAINT `fk5_FlightID` FOREIGN KEY (`FlightID`) REFERENCES `flight` (`FlightID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- seat
   
 ALTER TABLE `seats` ADD INDEX `PlaneID_idx2` (`PlaneID` ASC);
 ALTER TABLE `seats` ADD CONSTRAINT `fk2_PlaneID` FOREIGN KEY (`PlaneID`) REFERENCES `aeroplane` (`PlaneID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `seats` ADD INDEX `PassengerID_idx6` (`PassengerID` ASC);
+ALTER TABLE `seats` ADD CONSTRAINT `fk6_PassengerID` FOREIGN KEY (`PassengerID`) REFERENCES `passenger` (`PassengerID`) ON DELETE CASCADE ON UPDATE CASCADE;
   
 -- travel_class 
 
@@ -82,7 +85,6 @@ ALTER TABLE `account_details` ADD CONSTRAINT `fk_AccountID` FOREIGN KEY (`Accoun
 
 -- account
 
-
 -- booking 
   
 ALTER TABLE `booking` ADD INDEX `AccountID_idx2` (`AccountID` ASC);
@@ -91,9 +93,6 @@ ALTER TABLE `booking` ADD CONSTRAINT `fk2_AccountID` FOREIGN KEY (`AccountID`) R
 ALTER TABLE `booking` ADD INDEX `FlightID_idx4` (`FlightID` ASC);
 ALTER TABLE `booking` ADD CONSTRAINT `fk4_FlightID` FOREIGN KEY (`FlightID`) REFERENCES `flight` (`FlightID`) ON DELETE CASCADE ON UPDATE CASCADE;
    
-ALTER TABLE `booking` ADD INDEX `PassengerID_idx7` (`PassengerID` ASC); 
-ALTER TABLE `booking` ADD CONSTRAINT `fk7_PassengerID` FOREIGN KEY (`PassengerID`) REFERENCES `passenger` (`PassengerID`) ON DELETE CASCADE ON UPDATE CASCADE;
-
 -- booking_status 
   
 ALTER TABLE `booking_status` ADD INDEX `BookingID_idx4` (`BookingID` ASC);
