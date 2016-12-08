@@ -36,11 +36,9 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 -- BEGIN
 
-DROP TABLE IF EXISTS `passenger`;
-
 CREATE TABLE IF NOT EXISTS `passenger` (
   `PassengerID` INTEGER NOT NULL AUTO_INCREMENT,
-  `BookingID` INTEGER NOT NULL,
+  `BookingID` INTEGER,
   `Forename` VARCHAR(50) NOT NULL,
   `Surname` VARCHAR(50) NOT NULL,
   `Title` VARCHAR(20),
@@ -65,17 +63,17 @@ CREATE TABLE IF NOT EXISTS `passenger_details` (
   `PassengerID` INTEGER,
   `Birthdate` DATE NOT NULL,
   `Address` VARCHAR(255) NOT NULL,
-  `Town` VARCHAR(50) NOT NULL,
+  `Town` VARCHAR(50),
   `City` VARCHAR(50) NOT NULL,
   `Country` VARCHAR(50) NOT NULL,
   `Postcode` VARCHAR(20) NOT NULL,
-  `Telephone` INTEGER(20),
-  `MobileNumber` INTEGER(20) NOT NULL,
-  `Email` VARCHAR(255) NOT NULL,
+  `Telephone` VARCHAR(20),
+  `MobileNumber` VARCHAR(20) NOT NULL,
   PRIMARY KEY  (`PassengerDetailsID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11;
 
-INSERT INTO `passenger_details` (`PassengerDetailsID`, `PassengerID`, `Birthdate`, `Address`, `Town`, `City` , `Country` , `Postcode` , `Telephone` , `MobileNumber`) VALUES
+INSERT INTO `passenger_details` (`PassengerDetailsID`, `PassengerID`, `Birthdate`, `Address`, `Town`, `City` , `Country` , 
+`Postcode` , `Telephone` , `MobileNumber`) VALUES
 (1, 1, '1991-05-07', '13 hill Lane', 'Lisburn North', 'Lisburn', 'County Down', 'BT20 1OW', '028249268741', '07843666341'),
 (2, 2, '1990-03-07', '12 Forthill Lane', 'Bangor West', 'Bangor', 'County Down', 'BT19 1NW', '02824832234', '07743223413'),
 (3, 3, '1992-06-21', '24 Manor Rd ', 'Esher', 'London', 'London', 'kt10 0ql ', '02824832234', '07743223413'),
@@ -165,18 +163,6 @@ INSERT INTO `boarding_pass`(`BoardingPassID`, `PassengerID`, `FlightID`, `SeatID
 (1258, 8, 8, 8),
 (1259, 9, 9, 9),
 (1260, 10, 10, 10);
- 
-UPDATE boarding_pass SET BoardingPass = CONCAT('PSGR', BoardingPassID);
-
-UPDATE boarding_pass SET Barcode = FLOOR(rand() * 1000000000);
-
-UPDATE boarding_pass
-INNER JOIN passenger ON (boarding_pass.PassengerID=passenger.PassengerID)
-SET boarding_pass.PassengerName=CONCAT(passenger.Forename,' ', passenger.Surname);
-
-UPDATE boarding_pass
-INNER JOIN seats ON (boarding_pass.PassengerID=seats.PassengerID)
-SET boarding_pass.Seat=CONCAT(seats.Seat,' ',seats.Row);
 
 CREATE TABLE IF NOT EXISTS `checkin` (
   `CheckInID` INTEGER AUTO_INCREMENT,
@@ -210,17 +196,18 @@ CREATE TABLE IF NOT EXISTS `flight` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13;
 
 INSERT INTO `flight` (`FlightID`, `AirportID`, `PlaneID`, `FlightPrice`, `DepartureDestination`, `ArrivalDestination`, `NumberOfPassengers`) VALUES 
-(1, 1, 1, 44.99, 'France', 'London', 66),  
-(2, 2, 2, 53.99, 'France', 'Paris', 139),
-(3, 3, 3, 83.99, 'Dublin', 'Spain', 145),
-(4, 4, 4, 22.99, 'Belfast', 'London', 78), 
-(5, 5, 5, 31.99, 'France', 'Liverpool', 99), 
-(6, 6, 6, 21.99, 'Dublin', 'London', 73), 
-(7, 7, 7, 42.99, 'France', 'Belfast', 125), 
-(8, 8, 8, 31.99, 'Belfast', 'London', 92), 
-(9, 9, 9, 28.99, 'Liverpool', 'London', 78), 
+(1, 1, 10, 44.99, 'France', 'London', 66),  
+(2, 2, 11, 53.99, 'France', 'Paris', 139),
+(3, 3, 12, 83.99, 'Dublin', 'Spain', 145),
+(4, 4, 10, 22.99, 'Belfast', 'London', 78), 
+(5, 5, 6, 21.99, 'France', 'Liverpool', 99), 
+(6, 6, 10, 21.99, 'Dublin', 'London', 73), 
+(7, 7, 2, 42.99, 'France', 'Belfast', 125), 
+(8, 8, 10, 25.99, 'Belfast', 'London', 92), 
+(9, 9, 3, 18.99, 'Liverpool', 'Glasgow', 78), 
 (11, 10, 10, 19.99, 'Newcastle', 'London', 105), 
-(12, 10, 10, 34.99, 'Glasgow', 'London', 112); 
+(12, 10, 10, 34.99, 'Belfast', 'London', 94),
+(12, 10, 10, 50.99, 'Belfast', 'London', 82); 
 
 CREATE TABLE IF NOT EXISTS `flight_times` (
   `FlightTimesID` INTEGER AUTO_INCREMENT,
@@ -229,7 +216,7 @@ CREATE TABLE IF NOT EXISTS `flight_times` (
   `ArrivalTime` DATETIME NOT NULL,
   `ExpectedJourneyTime` TIME,
   PRIMARY KEY  (`FlightTimesID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15;
 
 INSERT INTO `flight_times` (`FlightTimesID`, `FlightID`, `DepartureTime`, `ArrivalTime`, `ExpectedJourneyTime`) VALUES 
 (1, 1, '2016-12-22 21:00:00', '2016-12-22 23:00:00', '2:00'),  
@@ -241,8 +228,10 @@ INSERT INTO `flight_times` (`FlightTimesID`, `FlightID`, `DepartureTime`, `Arriv
 (7, 7, '2016-12-23 12:30:00', '2016-12-23 15:30:00', '3:00'), 
 (8, 8, '2016-12-23 13:00:00', '2016-12-23 14:00:00', '1:00'), 
 (9, 9, '2016-12-23 15:00:00', '2016-12-23 16:00:00', '1:00'), 
-(11, 10, '2016-12-23 16:00:00', '2016-12-23 15:00:00', '1:00'), 
-(12, 10, '2016-12-23 16:00:00', '2016-12-23 15:00:00', '1:00'); 
+(10, 10, '2016-12-23 16:00:00', '2016-12-23 15:00:00', '1:00'), 
+(11, 11, '2016-12-23 17:00:00', '2016-12-23 18:00:00', '1:00'),
+(12, 12, '2016-12-23 19:00:00', '2016-12-23 20:00:00', '1:00'),
+(13, 13, '2016-12-23 22:30:00', '2016-12-23 23:30:00', '1:00'); 
 
 CREATE TABLE IF NOT EXISTS `promo_code` (
   `PromoCodeID` INTEGER AUTO_INCREMENT,
@@ -316,21 +305,20 @@ CREATE TABLE IF NOT EXISTS `luggage` (
   `PassengerID` INTEGER,
   `LuggageType` VARCHAR(50),
   `LuggagePrice` DECIMAL(3, 2),
-  `LuggageWeight` INTEGER(10),
   PRIMARY KEY  (`LuggageID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11;
 
-INSERT INTO `luggage`(`LuggageID`, `PassengerID`, `LuggageType`, `LuggagePrice`, `LuggageWeight`) VALUES
-(1, 1, 'Hold', 9.99, 15),
-(2, 2, 'Hold', 9.99, 14),
-(3, 3, 'Buggy', NULL, 2),
-(4, 4, 'Hold', 9.99, 12),
-(5, 5,  NULL, NULL, NULL),
-(6, 6, NULL, NULL, NULL),
-(7, 7, 'Sports Equipment', 6.99, 4),
-(8, 8, 'Pet', 32.99, 10),
-(9, 9, 'Hold', 9.99, 16),
-(10, 10, 'Hold', 9.99, 15);
+INSERT INTO `luggage`(`LuggageID`, `PassengerID`, `LuggageType`, `LuggagePrice`) VALUES
+(1, 1, 'Hold', 9.99),
+(2, 2, 'Hold', 9.99),
+(3, 3, 'Buggy', NULL),
+(4, 4, 'Hold', 9.99),
+(5, 5,  NULL, NULL),
+(6, 6, NULL, NULL),
+(7, 7, 'Sports Equipment', 6.99),
+(8, 8, 'Pet', 32.99),
+(9, 9, 'Hold', 9.99),
+(10, 10, 'Hold', 9.99);
 
 CREATE TABLE IF NOT EXISTS `payment` (
   `PaymentID` INTEGER AUTO_INCREMENT,
@@ -423,7 +411,7 @@ CREATE TABLE IF NOT EXISTS `booking_status` (
   `PaymentID` INTEGER,
   `Status` enum('ACTIVE','TEMP', 'DISABLED') NOT NULL DEFAULT 'TEMP',
   PRIMARY KEY (`BookingStatusID`)
- ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11;
+ ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6;
 
 INSERT INTO `booking_status` (`BookingStatusID`, `BookingID`, `PaymentID`, `Status`) VALUES
 (1, 1, 1, 'ACTIVE'),
@@ -431,6 +419,18 @@ INSERT INTO `booking_status` (`BookingStatusID`, `BookingID`, `PaymentID`, `Stat
 (3, 3, 3, 'ACTIVE'),
 (4, 4, 4, 'TEMP'),
 (5, 5, 5, 'ACTIVE');
+
+UPDATE boarding_pass SET BoardingPass = CONCAT('PSGR', BoardingPassID);
+
+UPDATE boarding_pass SET Barcode = FLOOR(rand() * 1000000000);
+
+UPDATE boarding_pass
+INNER JOIN passenger ON (boarding_pass.PassengerID=passenger.PassengerID)
+SET boarding_pass.PassengerName=CONCAT(passenger.Forename,' ', passenger.Surname);
+
+UPDATE boarding_pass
+INNER JOIN seats ON (boarding_pass.PassengerID=seats.PassengerID)
+SET boarding_pass.Seat=CONCAT(seats.Seat,' ',seats.Row);
 
 
 -- END
