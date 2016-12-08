@@ -194,17 +194,17 @@ CREATE TABLE IF NOT EXISTS `flight` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13;
 
 INSERT INTO `flight` (`FlightID`, `AirportID`, `PlaneID`, `FlightPrice`, `DepartureDestination`, `ArrivalDestination`, `NumberOfPassengers`) VALUES 
-(1, 1, 10, 44.99, 'France', 'London', 66),  
-(2, 2, 11, 53.99, 'France', 'Paris', 139),
-(3, 3, 12, 83.99, 'Dublin', 'Spain', 145),
-(4, 4, 10, 22.99, 'Belfast', 'London', 78), 
-(5, 5, 6, 21.99, 'France', 'Liverpool', 99), 
-(6, 6, 10, 21.99, 'Dublin', 'London', 73), 
-(7, 7, 2, 42.99, 'France', 'Belfast', 125), 
-(8, 8, 10, 25.99, 'Belfast', 'London', 92), 
-(9, 9, 3, 18.99, 'Liverpool', 'Glasgow', 78), 
-(11, 10, 10, 19.99, 'Newcastle', 'London', 105), 
-(12, 10, 10, 34.99, 'Belfast', 'London', 94),
+(1, 10, 10, 44.99, 'France', 'London', 66),  
+(2, 11, 11, 53.99, 'France', 'Paris', 139),
+(3, 12, 12, 83.99, 'Dublin', 'Spain', 145),
+(4, 10, 10, 22.99, 'Belfast', 'London', 78), 
+(5, 6, 6, 21.99, 'France', 'Liverpool', 99), 
+(6, 10, 10, 21.99, 'Dublin', 'London', 73), 
+(7, 2, 2, 42.99, 'France', 'Belfast', 125), 
+(8, 10, 10, 25.99, 'Belfast', 'London', 92), 
+(9, 3, 3, 18.99, 'Liverpool', 'Glasgow', 78), 
+(10, 10, 10, 19.99, 'Newcastle', 'London', 105), 
+(11, 10, 10, 34.99, 'Belfast', 'London', 94),
 (12, 10, 10, 50.99, 'Belfast', 'London', 82); 
 
 CREATE TABLE IF NOT EXISTS `flight_times` (
@@ -329,11 +329,11 @@ CREATE TABLE IF NOT EXISTS `payment` (
  ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6;
 
 INSERT INTO `payment` (`PaymentID`, `CardID`, `PromoCodeID`, `TotalDue`, `DateOfPayment`, `Confirmed`) VALUES 
-(1, 1, 1, '100.76', '2013-11-06 23:10:54', 1),
-(2, 2, 2, '120.21', '2014-07-21 23:10:54', 1),
-(3, 3, 3, '200.67', '2015-11-14 13:10:54', 1),
-(4, 4, 4, '231.76','2016-12-28 14:10:54', 1),
-(5, 5, 5, '454.67','2013-05-22 17:10:54', 1);
+(1, 1, 1, '50.96', '2013-11-06 23:10:54', 1),
+(2, 2, 2, '83.89', '2014-07-21 23:10:54', 1),
+(3, 3, 3, '64.97', '2015-11-14 13:10:54', 1),
+(4, 4, 4, '29.96','2016-12-28 14:10:54', 1),
+(5, 5, 5, '58.99','2013-05-22 17:10:54', 1);
 
 CREATE TABLE IF NOT EXISTS `card_details` (
   `CardID` INTEGER AUTO_INCREMENT,
@@ -379,7 +379,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   `Password` VARCHAR(64) NOT NULL,
   `Username` VARCHAR(20) NOT NULL,
   PRIMARY KEY  (`AccountID`)
- ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11;
+ ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6;
 
 INSERT INTO `account` (`AccountID`, `Password`, `Username`) VALUES 
 (1, SHA1('password1'), 'Dmaw912'), 

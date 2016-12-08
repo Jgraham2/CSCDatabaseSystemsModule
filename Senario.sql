@@ -1,24 +1,10 @@
+-- BEGIN SENARIO
 
 -- A User Searches for Flights
 SELECT *  
 FROM airline_booking.flight 
 INNER JOIN airline_booking.flight_times 
 ON flight.FlightID=flight_times.FlightID;
-
--- search cheap flights
-SELECT *  
-FROM airline_booking.flight 
-INNER JOIN airline_booking.flight_times
-ON flight.FlightID=flight_times.FlightID
-ORDER BY FlightPrice ASC;
-
--- A User Searches for cheapest Flights going to London from belfast
-SELECT flight.FlightID,flight.DepartureDestination, flight.ArrivalDestination, flight_times.DepartureTime, flight_times.ArrivalTime, flight.FlightPrice 
-FROM airline_booking.flight 
-INNER JOIN airline_booking.flight_times 
-ON flight.FlightID=flight_times.FlightID 
-WHERE DepartureDestination = 'Belfast' AND ArrivalDestination = 'London'
-ORDER BY FlightPrice ASC; 
 
 -- A User Searches for Flights going to London from belfast after 9am on 2016-12-23
 SELECT flight.FlightID,flight.DepartureDestination, flight.ArrivalDestination, flight_times.DepartureTime, flight_times.ArrivalTime, flight.FlightPrice  
@@ -58,12 +44,9 @@ VALUES (8, LAST_INSERT_ID(), 'F', 1, 'YES');
 SET FOREIGN_KEY_CHECKS=1;
 commit;
 
-select * from seats;
-select * from passenger_details;
-select * from passenger_details;
-
 
 -- Show new Booking
+
 -- SELECT booking.BookingID, booking.FlightID, passenger.PassengerID, 
 SELECT (CONCAT(passenger.Title, ' ', passenger.Forename, ' ', passenger.Surname)) as Name, 
 passenger.PassengerType, passenger_details.Birthdate, 
@@ -83,23 +66,25 @@ ORDER BY passenger.PassengerID DESC;
 
 -- calculate price
 
-SELECT seats.SeatPrice as 'Seat Price', luggage.LuggagePrice as 'Luggage Price', travel_class.Value as 'Class Price',  
-(CONCAT(seats.SeatPrice + luggage.LuggagePrice + travel_class.Value)) as 'Total Price'
+SELECT flight.FlightPrice, seats.SeatPrice as 'Seat Price', luggage.LuggagePrice as 'Luggage Price', travel_class.Value as 'Class Price',  
+(CONCAT(flight.FlightPrice + seats.SeatPrice + luggage.LuggagePrice + travel_class.Value)) as 'Total Price'
 FROM airline_booking.booking 
 RIGHT JOIN airline_booking.flight ON booking.FlightID=flight.flightID
-RIGHT JOIN airline_booking.passenger ON booking.PassengerID=passenger.PassengerID
+RIGHT JOIN airline_booking.passenger ON booking.BookingID=passenger.BookingID
 RIGHT JOIN airline_booking.seats ON passenger.PassengerID=seats.PassengerID
 RIGHT JOIN airline_booking.luggage ON passenger.PassengerID=luggage.PassengerID
 RIGHT JOIN  airline_booking.travel_class ON passenger.PassengerID=travel_class.PassengerID
 WHERE passenger.PassengerID='11';
 
 -- user wants to change his class
+start transaction;
 UPDATE travel_class
 SET Class = 'Business Class'
 WHERE PassengerID=11;
 UPDATE travel_class
 SET Value = '10'
 WHERE PassengerID=11;
+commit;
 
 -- check it
 SELECT passenger.PassengerID, (CONCAT(passenger.Title, ' ', passenger.Forename, ' ', passenger.Surname)) as Name, travel_class.Class,
@@ -118,19 +103,17 @@ ORDER BY passenger.PassengerID DESC;
 
 -- recalculate price
 
-SELECT seats.SeatPrice as 'Seat Price', luggage.LuggagePrice as 'Luggage Price', travel_class.Value as 'Class Price',  
-(CONCAT(seats.SeatPrice + luggage.LuggagePrice + travel_class.Value)) as 'Total Price'
+SELECT flight.FlightPrice, seats.SeatPrice as 'Seat Price', luggage.LuggagePrice as 'Luggage Price', travel_class.Value as 'Class Price',  
+(CONCAT(flight.FlightPrice + seats.SeatPrice + luggage.LuggagePrice + travel_class.Value)) as 'Total Price'
 FROM airline_booking.booking 
 RIGHT JOIN airline_booking.flight ON booking.FlightID=flight.flightID
-RIGHT JOIN airline_booking.passenger ON booking.PassengerID=passenger.PassengerID
+RIGHT JOIN airline_booking.passenger ON booking.BookingID=passenger.BookingID
 RIGHT JOIN airline_booking.seats ON passenger.PassengerID=seats.PassengerID
 RIGHT JOIN airline_booking.luggage ON passenger.PassengerID=luggage.PassengerID
 RIGHT JOIN  airline_booking.travel_class ON passenger.PassengerID=travel_class.PassengerID
 WHERE passenger.PassengerID='11';
 
 -- Payment Confirmed
-
-select * from payment;
 
 INSERT INTO airline_booking.card_details (AccountDetailsID, CardNumber, NameOnCard,BillingAddress, CvvNumber, ExpiryDate, ValidFrom, TypeOfCard, AdditionalCardCharge) 
 VALUES (6, '8212147483647', 'MR WAHLBERG', '3030 Pennsylvania Avenue', '316', '2019-09-01', '2014-09-01', 'Visa Credit', 1);
@@ -139,34 +122,31 @@ select * from card_details ORDER BY CardID DESC;
 
 -- new price
 
-SELECT seats.SeatPrice as 'Seat Price', luggage.LuggagePrice as 'Luggage Price', travel_class.Value as 'Class Price',  
-(CONCAT(seats.SeatPrice + luggage.LuggagePrice + travel_class.Value * 1.4)) as 'Total Price'
+SELECT flight.FlightPrice, seats.SeatPrice as 'Seat Price', luggage.LuggagePrice as 'Luggage Price', travel_class.Value as 'Class Price',  
+(CONCAT(TRUNCATE((flight.FlightPrice + seats.SeatPrice + luggage.LuggagePrice + travel_class.Value* 1.05), 2))) as 'Total Price'
 FROM airline_booking.booking 
 RIGHT JOIN airline_booking.flight ON booking.FlightID=flight.flightID
-RIGHT JOIN airline_booking.passenger ON booking.PassengerID=passenger.PassengerID
+RIGHT JOIN airline_booking.passenger ON booking.BookingID=passenger.BookingID
 RIGHT JOIN airline_booking.seats ON passenger.PassengerID=seats.PassengerID
 RIGHT JOIN airline_booking.luggage ON passenger.PassengerID=luggage.PassengerID
 RIGHT JOIN  airline_booking.travel_class ON passenger.PassengerID=travel_class.PassengerID
 WHERE passenger.PassengerID='11';
 
 -- proceed with payment
-select * from payment ORDER BY PaymentID DESC;
 
 INSERT INTO airline_booking.payment (CardID, TotalDue, DateOfPayment) 
-VALUES (last_insert_id(), 43.98, current_date());
+VALUES (last_insert_id(), 66.47, current_date());
 
 -- check but waiting for bank confirmation
 SELECT * FROM payment ORDER BY PaymentID DESC;
 
+-- booking cant be confirmed until payment is confirmed
+select BookingStatusID, BookingID, Status from booking_status ORDER BY BookingID DESC;
+
 -- once bank confirmation is recived booking status updates to active
-UPDATE payment SET Confirmed = '1' WHERE PaymentID=last_insert_id();
-UPDATE payment SET Confirmed = '1' WHERE PaymentID=last_insert_id();
+UPDATE payment SET Confirmed = '1' WHERE PaymentID= 6;
+UPDATE booking_status SET Status = 'ACTIVE' WHERE BookingStatusID= 6;
 
-SELECT Confirmed, Status FROM payment, booking_status;
+SELECT payment.PaymentID, Confirmed, BookingStatusID, Status FROM payment, booking_status WHERE BookingStatusID = '6' LIMIT 1;
 
-
-
-
-
-
-
+-- END OF SENARIO
