@@ -87,8 +87,6 @@ INSERT INTO `passenger_details` (`PassengerDetailsID`, `PassengerID`, `Birthdate
 
 CREATE TABLE IF NOT EXISTS `aeroplane` (
   `PlaneID` INTEGER AUTO_INCREMENT,
-  `FlightID` INTEGER,
-  `SeatID` INTEGER,
   `ModelNumber` INTEGER(5) NOT NULL,
   `ModelName` VARCHAR(5) NOT NULL,
   `PlaneCode` VARCHAR(20) NOT NULL,
@@ -258,27 +256,27 @@ INSERT INTO `promo_code`(`PromoCodeID`, `PaymentID`, `PromoCode`, `ValidFrom`, `
 (10, 10, 'NED9213', '2017-11-01', '2017-12-01', 'Netherlands Promo', 5, '0');
 
 CREATE TABLE IF NOT EXISTS `seats` (
-  `SeatID` INTEGER,
+  `SeatID` INTEGER AUTO_INCREMENT,
   `PlaneID` INTEGER,
   `PassengerID` INTEGER,
   `Seat` VARCHAR(255) NOT NULL,
   `Row` VARCHAR(255) NOT NULL,
-  `SeatPrice` DECIMAL(4, 2) NOT NULL,
+  `SeatPrice` DECIMAL(4, 2) default '19.99',
   `Reserved` VARCHAR(255) NOT NULL,
   PRIMARY KEY  (`SeatID`)
  ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11;
 
 INSERT INTO `seats` (`SeatID`, `PlaneID`, `PassengerID`, `Seat`, `Row`, `SeatPrice`, `Reserved`) VALUES
-(1, 1, 1, 'A', '1', '45.00', 'YES'),
-(2, 1, 2, 'A', '2', '45.00', 'YES'),
-(3, 1, 3, 'A', '3', '45.00', 'YES'),
-(4, 2, 4, 'E', '3', '45.00', 'YES'),
-(5, 2, 5, 'E', '4', '45.00', 'YES'),
-(6, 8, 6, 'C', '6', '45.00', 'NO'),
-(7, 5, 7, 'J', '4', '45.00', 'NO'),
-(8, 2, 8, 'G', '4', '45.00', 'YES'),
-(9, 3, 9, 'G', '5', '45.00', 'YES'),
-(10, 2, 10, 'G', '6', '45.00', 'YES');
+(1, 1, 1, 'A', '1', '19.99', 'YES'),
+(2, 1, 2, 'A', '2', '19.99', 'YES'),
+(3, 1, 3, 'A', '3', '19.99', 'YES'),
+(4, 2, 4, 'E', '3', '19.99', 'YES'),
+(5, 2, 5, 'E', '4', '19.99', 'YES'),
+(6, 8, 6, 'C', '6', '19.99', 'NO'),
+(7, 5, 7, 'J', '4', '19.99', 'NO'),
+(8, 2, 8, 'G', '4', '19.99', 'YES'),
+(9, 3, 9, 'G', '5', '19.99', 'YES'),
+(10, 2, 10, 'G', '6', '19.99', 'YES');
 
 CREATE TABLE IF NOT EXISTS `travel_class` (
   `TravelClassID` INTEGER AUTO_INCREMENT,
@@ -323,7 +321,7 @@ INSERT INTO `luggage`(`LuggageID`, `PassengerID`, `LuggageType`, `LuggagePrice`)
 CREATE TABLE IF NOT EXISTS `payment` (
   `PaymentID` INTEGER AUTO_INCREMENT,
   `CardID` INTEGER,
-  `PromoCodeID` INTEGER NOT NULL,
+  `PromoCodeID` INTEGER,
   `TotalDue` DECIMAL(12, 2) NOT NULL,
   `DateOfPayment` DATE, -- confirmed state change to true will set current timestamp update.
   `Confirmed` BOOLEAN NOT NULL default '0',
@@ -343,7 +341,7 @@ CREATE TABLE IF NOT EXISTS `card_details` (
   `CardNumber` INTEGER(16) NOT NULL,
   `NameOnCard` VARCHAR(255) NOT NULL,
   `BillingAddress` VARCHAR(255) NOT NULL,
-  `CvvNumber` INTEGER(3) NOT NULL,
+  `CvvNumber` VARCHAR(10) NOT NULL,
   `ExpiryDate` DATE NOT NULL,
   `ValidFrom` DATE,
   `TypeOfCard` VARCHAR(20) NOT NULL,
@@ -353,11 +351,11 @@ CREATE TABLE IF NOT EXISTS `card_details` (
   ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6;
 
 INSERT INTO `card_details` (`CardID`, `AccountDetailsID`, `CardNumber`, `NameOnCard`, `BillingAddress`, `CvvNumber`, `ExpiryDate`, `ValidFrom`, `TypeOfCard`, `IssueNumber`, `AdditionalCardCharge`) VALUES
-(1, 1, 184695632833474, 'MR MCKAY', '1 cromwell road', 001, '2018-01-01', '2014-01-01', 'Visa Debit', NULL, 0),
-(2, 2, 126403928429462, 'MR ADAMS', '2 real road', 002, '2018-01-01', '2014-05-03', 'Mastercard Debit', NULL, 0),
-(3, 3, 790422834392439, 'MR PETERS', '12 rattlin road', 003, '2018-01-01', '2014-05-06', 'Visa Credit', NULL, 1),
-(4, 4, 448292223495754, 'MRS DUNCAN', '15 cromwell road', 004, '2018-01-01', '2014-07-25', 'Mastercard Debit', NULL, 0),
-(5, 5, 958489283732113, 'MR GREY', '17 magdella street', 005, '2018-01-01', '1990-01-13', 'Maestro Credit', 5000000005, 1);
+(1, 1, '184695632833474', 'MR MCKAY', '1 cromwell road', '001', '2018-01-01', '2014-01-01', 'Visa Debit', NULL, 0),
+(2, 2, '126403928429462', 'MR ADAMS', '2 real road', '002', '2018-01-01', '2014-05-03', 'Mastercard Debit', NULL, 0),
+(3, 3, '790422834392439', 'MR PETERS', '12 rattlin road', '003', '2018-01-01', '2014-05-06', 'Visa Credit', NULL, 1),
+(4, 4, '448292223495754', 'MRS DUNCAN', '15 cromwell road', '004', '2018-01-01', '2014-07-25', 'Mastercard Debit', NULL, 0),
+(5, 5, '958489283732113', 'MR GREY', '17 magdella street', '005', '2018-01-01', '1990-01-13', 'Maestro Credit', '5000000005', 1);
 
 CREATE TABLE IF NOT EXISTS `account_details` (
   `AccountDetailsID` INTEGER AUTO_INCREMENT,
