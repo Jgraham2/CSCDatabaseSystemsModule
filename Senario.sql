@@ -34,7 +34,7 @@ VALUES (LAST_INSERT_ID());
 INSERT INTO airline_booking.passenger (BookingID, Title, Forename, Surname, PassengerType) 
 VALUES (LAST_INSERT_ID(), 'Mr', 'Mark', 'Wahlberg', 'Standard');
 INSERT INTO airline_booking.passenger_details (PassengerID, Birthdate, Address, Town, City, Country, Postcode, Telephone, MobileNumber) 
-VALUES (LAST_INSERT_ID(), '1971-06-05', '3030 Pennsylvania Avenue', 'Belfast', 'Belfast', 'County Antrim', 'BT365AB', '0281312558', '07581112');
+VALUES (LAST_INSERT_ID(), '1971-06-05', '3030 Pennsylvania Avenue', 'Belfast', 'Belfast', 'County Antrim', 'BT365AB', '02813125583', '07581112312');
 INSERT INTO airline_booking.luggage (PassengerID, LuggageType, LuggagePrice) 
 VALUES (LAST_INSERT_ID(), 'Hold', 9.99);
 INSERT INTO airline_booking.travel_class (PassengerID, Class, Value) 
